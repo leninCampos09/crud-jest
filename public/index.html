@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Productos</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Favicon -->
+	<link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta name="robots" content="noindex">
+</head>
+<body>
+
+  <h1>Gestión de Productos</h1>
+
+  <div class="list-header">
+    <h2>Productos Registrados</h2>
+    <button id="btnCrear" class="btn-crear" aria-label="Crear producto">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Crear Producto</span>
+    </button>
+  </div>
+
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button id="closeModal" class="close">&times;</button>
+      <h3 id="modalTitle">Crear Producto</h3>
+      <form id="productoForm">
+        <input type="hidden" id="idProducto">
+        <label>Nombre</label>
+        <div class="input-icon">
+          <span class="icon" aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
+          <input type="text" id="nombre" name="nombre" required>
+        </div>
+
+        <label>Precio</label>
+        <div class="input-icon">
+          <span class="icon" aria-hidden="true"><i class="fa-solid fa-dollar-sign"></i></span>
+          <div class="money-field">
+            <span class="money-prefix">$</span>
+            <input type="text" id="precio" name="precio" required>
+          </div>
+        </div>
+
+        <label>Descripción</label>
+        <div class="input-icon">
+          <span class="icon" aria-hidden="true"><i class="fa-solid fa-align-left"></i></span>
+          <input type="text" id="descripcion" name="descripcion">
+        </div>
+
+        <label>Imagen (portada)</label>
+        <div id="dropArea" class="drop-area" style="position:relative;">
+          <span class="drop-icon" aria-hidden="true"><i class="fa-solid fa-image"></i></span>
+          <span class="drop-text">Arrastra la imagen aquí o haz clic para seleccionar</span>
+          <img id="previewImg" class="preview" alt="Vista previa" style="display:none;" />
+          <input type="file" id="imagen" name="imagen" accept="image/*" style="display:none;">
+        </div>
+
+        <button type="submit">Guardar Producto</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Detail modal -->
+  <div id="detailModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button id="closeDetail" class="close">&times;</button>
+      <h3 id="detailTitle">Detalle del Producto</h3>
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-top:12px;">
+        <img id="detailImage" src="" alt="Imagen" style="width:160px;height:160px;object-fit:cover;border-radius:8px;display:block;" />
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+          <div><strong>Nombre:</strong> <span id="detailName"></span></div>
+          <div><strong>Precio:</strong> <span id="detailPrice"></span></div>
+          <div><strong>Descripción:</strong></div>
+          <div id="detailDescription" style="white-space:pre-wrap;color:#374151"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-controls">
+    <div class="left-controls">
+      <label class="per-page-label">Mostrar:
+        <select id="perPageSelect" class="per-page-select">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+        <span class="per-page-text">registros</span>
+      </label>
+    </div>
+    <div class="right-controls">
+      <label class="search-label">Buscar:</label>
+      <div class="search-wrapper">
+        <input type="search" id="searchInput" placeholder="Buscar...">
+        <button id="clearSearchBtn" class="clear-search-btn hidden" aria-label="Limpiar búsqueda">&times;</button>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Portada</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tablaProductos"></tbody>
+  </table>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:12px;">
+    <div id="paginationInfo" style="color:#374151;font-size:14px;"></div>
+    <div id="pagination" style="display:flex;justify-content:center;gap:6px;"></div>
+  </div>
+
+  <div id="loadingOverlay" class="loading-overlay" style="display:none;">
+    <div class="spinner" aria-hidden="true"></div>
+  </div>
+
+  <script src="/app.js"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const ths = Array.from(document.querySelectorAll('table thead th'));
+    ths.forEach((th, idx) => {
+      if (idx === ths.length - 1) return;
+      if (th.querySelector('.sort-icon')) return;
+      th.style.position = th.style.position || 'relative';
+      const icon = document.createElement('i');
+      icon.className = 'fa-solid fa-sort sort-icon';
+      th.appendChild(icon);
+    });
+  });
+  </script>
+
+</body>
+</html>

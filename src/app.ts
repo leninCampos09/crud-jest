@@ -1,13 +1,22 @@
 import express from "express";
+import path from "path";
 import dotenv from "dotenv";
 import usuarioRoutes from "./routes/usuarioRoutes";
+import productoRoutes from "./routes/productoRoutes";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
+// servir frontend estático (carpeta public en la raíz del proyecto)
+app.use(express.static(path.join(__dirname, "..", "public")));
+
+// servir imágenes subidas desde src/productos en la ruta /productos
+app.use("/productos", express.static(path.join(__dirname, "productos")));
+
 app.use("/usuarios", usuarioRoutes);
+app.use("/productos", productoRoutes);
 
 if (require.main === module) {
   const port = Number(process.env.PORT || 3000);

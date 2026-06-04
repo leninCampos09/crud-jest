@@ -1,0 +1,98 @@
+/* Base styles adapted from user's example */
+body{font-family:Arial,sans-serif;background:#f4f7fc;margin:0;padding:20px;overflow-x:hidden}
+h1{text-align:center;color:#1e3a8a;margin-bottom:30px;}
+.list-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:6px}
+.btn-crear{display:inline-flex;align-items:center;gap:8px;background:#10b981;color:white;padding:8px 12px;border-radius:8px;border:none;font-weight:700}
+.btn-crear:hover{transform:translateY(-2px)}
+form{width:100%;margin:0 auto 30px auto;background:#ffffff;padding:20px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);display:flex;flex-direction:column;gap:10px}
+label{font-weight:bold;color:#374151}
+input{padding:10px;border:1px solid #c9b598;border-radius:5px;font-size:14px}
+input:focus{outline:none;border-color:#2563eb}
+button{padding:10px;border:none;border-radius:5px;font-size:14px;font-weight:bold;cursor:pointer;transition:0.3s}
+button[type="submit"]{background:#2563eb;color:white}
+table{width:100%;margin-top:20px;border-collapse:collapse;background:transparent;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+tbody tr{background:#ffffff}tbody tr:nth-child(odd){background:#fbfbfb}
+th{background:#2563eb;color:white;padding:12px}
+td{padding:10px;text-align:center;border-bottom:1px solid #e5e7eb}
+.thumb{width:72px;height:96px;object-fit:cover;border-radius:8px;border:1px solid #e6e9ef;display:block;margin:0 auto}
+.table-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0;padding:8px 12px;background:linear-gradient(180deg,#ffffff,#fbfdff);border:1px solid #e6eefc;border-radius:8px}
+.per-page-select{appearance:none;padding:6px 10px;border-radius:6px;border:1px solid #d1d5db}
+.search-wrapper{position:relative}
+.search-wrapper input[type="search"]{padding-right:30px}
+.clear-search-btn{background:transparent;border:none;font-size:18px;cursor:pointer;color:#6b7280}
+.hidden{display:none !important}
+.drop-area{border:2px dashed #cbd5e1;padding:12px;border-radius:8px;text-align:center;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;flex-direction:column;background:#fafafa}
+.drop-area.dragover{border-color:#60a5fa;background:#f0f9ff}
+.drop-area .preview{max-width:140px;max-height:180px;object-fit:cover;display:block}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);z-index:1000;padding:16px;box-sizing:border-box}
+.modal.show{display:flex}
+.modal-content{background:#fff;padding:32px 40px;border-radius:10px;width:900px;max-width:95vw;box-shadow:0 8px 24px rgba(0,0,0,0.2);position:relative;max-height:86vh;overflow-y:auto;overflow-x:hidden}
+
+/* Give inner card/cardview spacing so they don't touch modal edges */
+.modal-content > .cardview,
+.modal-content > .card,
+.modal-content .cardview,
+.modal-content .card{
+	padding:16px;
+	margin:0;
+	box-sizing:border-box;
+	max-width:100%;
+}
+
+/* Prevent internal elements from causing horizontal overflow inside modals */
+.modal-content img,
+.modal-content .card-inner,
+.modal-content .cardview-inner,
+.modal-content .card-view{
+	max-width:100%;
+	height:auto;
+	box-sizing:border-box;
+}
+
+/* Input icon wrapper */
+.input-icon{position:relative;margin-bottom:12px}
+.input-icon .icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#6b7280;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;pointer-events:none}
+.input-icon input{padding-left:44px}
+
+/* Adjust money field when inside input-icon */
+.input-icon .money-field{display:block}
+.input-icon .money-prefix{left:44px}
+.input-icon .money-field input{padding-left:68px}
+
+/* Drop area icon */
+.drop-area{position:relative}
+.drop-area .drop-icon{position:absolute;left:14px;top:10px;color:#9ca3af;font-size:18px;pointer-events:none}
+
+/* Ensure all elements inside modal respect padding and don't overflow to the right */
+.modal-content *{box-sizing:border-box}
+.modal-content input,
+.modal-content textarea,
+.modal-content select,
+.modal-content .drop-area,
+.modal-content .table,
+.modal-content .form-control{
+	max-width:100%;
+	width:100%;
+}
+
+/* Small screens: reduce modal width and padding to avoid edge collisions */
+@media (max-width:520px){
+	.modal-content{padding:20px;width:calc(100% - 40px);max-width:calc(100% - 40px)}
+}
+.close{position:absolute;right:10px;top:8px;border:none;background:transparent;font-size:22px;cursor:pointer}
+.loading-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.6);z-index:2000}
+.spinner{width:48px;height:48px;border-radius:50%;border:4px solid rgba(0,0,0,0.08);border-top-color:#2563eb;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-eliminar{background:#dc2626;color:white;padding:8px;border-radius:6px;border:none}
+.btn-eliminar:hover{background:#b91c1c}
+.btn-ver{background:#06b6d4;color:white;border-radius:6px;padding:8px 10px;border:none}
+.btn-ver:hover{transform:translateY(-2px)}
+
+/* Ensure action buttons in the last table column have space between them */
+tbody td:last-child{display:flex;gap:8px;justify-content:center;align-items:center}
+
+/* Price input with dollar prefix */
+.money-field{position:relative;display:inline-block;width:100%}
+.money-prefix{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#374151;font-weight:700;pointer-events:none}
+.money-field input{padding-left:30px}
+
