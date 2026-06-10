@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integraciones</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="brand">airframe</div>
+      <div class="profile">
+        <img src="https://i.pravatar.cc/64?img=5" alt="avatar">
+        <div class="meta">
+          <div class="name">Gregorio Carroll</div>
+          <div class="role">International Branding Producer</div>
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/index.html"><i class="fa-solid fa-box"></i><span>Productos</span></a></li>
+          <li><a href="/usuarios.html"><i class="fa-solid fa-users"></i><span>Usuarios</span></a></li>
+          <li><a href="/reportes.html"><i class="fa-solid fa-chart-pie"></i><span>Reportes</span></a></li>
+          <li class="active"><a href="/integraciones.html"><i class="fa-solid fa-plug"></i><span>Integraciones</span></a></li>
+          <li><a href="/ayuda.html"><i class="fa-solid fa-circle-question"></i><span>Ayuda</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div class="topbar">
+          <div class="left">
+            <button id="burgerBtn" class="burger" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+            <div class="page-title">Integraciones</div>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <h2>Integraciones</h2>
+        <p>Conecta servicios externos (pago, correo, analytics). Aquí puedes añadir configuraciones y claves.</p>
+        <div style="margin-top:12px">
+          <ul>
+            <li>Stripe - Estado: no conectado</li>
+            <li>Mailgun - Estado: conectado</li>
+            <li>Google Analytics - Estado: conectado</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

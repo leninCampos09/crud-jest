@@ -14,7 +14,10 @@ const uploadsDir = path.resolve(__dirname, "..", "uploads");
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    cb(null, productosDir);
+    // si el campo es 'avatar' usar uploads, si no usar productos
+    // esto permite reutilizar el mismo middleware para distintos campos
+    const dest = _file.fieldname === "avatar" ? uploadsDir : productosDir;
+    cb(null, dest);
   },
   filename: (_req, file, cb) => {
     const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;

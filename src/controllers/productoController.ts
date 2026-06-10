@@ -3,6 +3,8 @@ import path from "path";
 import fs from "fs";
 import * as model from "../models/productoModel";
 
+const MAX_NOMBRE_LEN = 150;
+
 export const getAll = async (_req: Request, res: Response) => {
   try {
     const products = await model.getAll();
@@ -46,6 +48,15 @@ export const create = async (req: Request, res: Response) => {
     if (!nombre) {
       removeUploaded();
       return res.status(400).json({ error: "El campo 'nombre' es requerido" });
+    }
+
+    if (typeof nombre === "string" && nombre.length > MAX_NOMBRE_LEN) {
+      removeUploaded();
+      return res
+        .status(400)
+        .json({
+          error: `El campo 'nombre' excede el máximo de ${MAX_NOMBRE_LEN} caracteres`,
+        });
     }
 
     // detectar campo precio (case-insensitive) o tomar req.body.precio
@@ -208,6 +219,18 @@ export const update = async (req: Request, res: Response) => {
     // Determine new values, falling back to existing
     const nombre = req.body.nombre ?? existing.nombre;
     const descripcion = req.body.descripcion ?? existing.descripcion;
+
+    if (
+      req.body &&
+      typeof req.body.nombre === "string" &&
+      req.body.nombre.length > MAX_NOMBRE_LEN
+    ) {
+      return res
+        .status(400)
+        .json({
+          error: `El campo 'nombre' excede el máximo de ${MAX_NOMBRE_LEN} caracteres`,
+        });
+    }
 
     // precio parsing (same logic as create) if provided
     let precioNum = existing.precio;

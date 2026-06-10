@@ -27,8 +27,12 @@ export const create = async (req: Request, res: Response) => {
     const { nombre, email } = req.body;
     if (!nombre || !email)
       return res.status(400).json({ error: "Datos incompletos" });
-    const id = await UsuarioModel.create({ nombre, email });
-    res.status(201).json({ id, nombre, email });
+    // si viene un archivo, construir la URL pública
+    const avatar = (req as any).file
+      ? `/uploads/${(req as any).file.filename}`
+      : null;
+    const id = await UsuarioModel.create({ nombre, email, avatar });
+    res.status(201).json({ id, nombre, email, avatar });
   } catch (err: any) {
     console.error("create user error:", err);
     if (err?.code === "ER_DUP_ENTRY")
@@ -41,9 +45,16 @@ export const updateUser = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
     const { nombre, email } = req.body;
-    const ok = await UsuarioModel.update(id, { nombre, email });
+    const avatar = (req as any).file
+      ? `/uploads/${(req as any).file.filename}`
+      : undefined;
+    const ok = await UsuarioModel.update(id, {
+      nombre,
+      email,
+      ...(avatar !== undefined ? { avatar } : {}),
+    });
     if (!ok) return res.status(404).json({ error: "Usuario no encontrado" });
-    res.json({ id, nombre, email });
+    res.json({ id, nombre, email, avatar });
   } catch (err) {
     res.status(500).json({ error: "Error al actualizar usuario" });
   }

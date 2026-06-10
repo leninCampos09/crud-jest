@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Configuración</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="robots" content="noindex">
+  <style>
+    .settings { max-width:720px;margin:18px auto;padding:18px }
+    .panel { background:var(--card);border-radius:8px;padding:14px;margin-bottom:12px }
+    .swatches { display:flex;gap:10px;flex-wrap:wrap }
+    .swatch { width:36px;height:36px;border-radius:18px;box-shadow:0 0 0 2px transparent;cursor:pointer;border:2px solid transparent }
+    .swatch.selected { box-shadow:0 0 0 3px rgba(0,0,0,0.06);transform:scale(1.03) }
+    .option-row { display:flex;align-items:center;gap:12px;padding:8px 0 }
+    .radio { display:inline-flex;align-items:center;gap:8px }
+    .label-ghost { color:var(--muted);font-size:0.95rem }
+    .brand-preview { font-weight:700;font-size:20px }
+    .preview-sample { display:flex;align-items:center;gap:12px }
+    .reset-btn { margin-top:8px }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="brand">airframe</div>
+      <div class="profile">
+        <img src="https://i.pravatar.cc/64?img=5" alt="avatar">
+        <div class="meta">
+          <div class="name">Gregorio Carroll</div>
+          <div class="role">International Branding Producer</div>
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/index.html"><i class="fa-solid fa-box"></i><span>Productos</span></a></li>
+          <li><a href="/usuarios.html"><i class="fa-solid fa-users"></i><span>Usuarios</span></a></li>
+          <li class="nav-section"><span class="section-title">Ventas</span></li>
+          <li><a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a></li>
+          <li><a href="/pedidos.html"><i class="fa-solid fa-receipt"></i><span>Pedidos</span></a></li>
+          <li><a href="/clientes.html"><i class="fa-solid fa-people-roof"></i><span>Clientes</span></a></li>
+          <li class="nav-section"><span class="section-title">Configuración</span></li>
+          <li class="active"><a href="/configuracion.html"><i class="fa-solid fa-cog"></i><span>Configuración</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div class="topbar">
+          <div class="left">
+            <button id="burgerBtn" class="burger" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+            <div class="page-title">Configuración</div>
+          </div>
+        </div>
+      </header>
+
+      <section class="card settings">
+        <div class="panel">
+          <h3>Nav Color</h3>
+          <div class="swatches" id="navColorSwatches">
+            <div class="swatch" data-color="#0ea5e9" style="background:#0ea5e9" title="Primary"></div>
+            <div class="swatch" data-color="#10b981" style="background:#10b981" title="Success"></div>
+            <div class="swatch" data-color="#06b6d4" style="background:#06b6d4" title="Info"></div>
+            <div class="swatch" data-color="#ef4444" style="background:#ef4444" title="Danger"></div>
+            <div class="swatch" data-color="#f59e0b" style="background:#f59e0b" title="Warning"></div>
+            <div class="swatch" data-color="#6366f1" style="background:#6366f1" title="Indigo"></div>
+            <div class="swatch" data-color="#ec4899" style="background:#ec4899" title="Pink"></div>
+            <div class="swatch" data-color="#facc15" style="background:#facc15" title="Yellow"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Nav Style</h3>
+          <div class="option-row">
+            <label class="radio"><input type="radio" name="navStyle" value="light"> Light</label>
+            <label class="radio"><input type="radio" name="navStyle" value="dark"> Dark</label>
+            <label class="radio"><input type="radio" name="navStyle" value="color"> Color</label>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Título y Sidebar</h3>
+          <div class="option-row">
+            <label class="label-ghost">Color del título</label>
+            <input type="color" id="brandColor" value="#111827">
+          </div>
+          <div class="option-row">
+            <label class="label-ghost">Color del sidebar</label>
+            <input type="color" id="sidebarColor" value="#0f172a">
+          </div>
+          <div style="margin-top:8px">
+            <div class="preview-sample">
+              <div class="brand-preview" id="brandPreview">airframe</div>
+              <div style="flex:1;text-align:right"><button id="resetBtn" class="btn reset-btn">Reset Options</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Más opciones</h3>
+          <div class="option-row"><label class="label-ghost">Mostrar sombras en tarjetas</label><input type="checkbox" id="cardShadows"></div>
+          <div class="option-row"><label class="label-ghost">Reducir padding</label><input type="checkbox" id="compactMode"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const swatches = document.getElementById('navColorSwatches');
+    const brandPreview = document.getElementById('brandPreview');
+    const brandColorInput = document.getElementById('brandColor');
+    const sidebarColorInput = document.getElementById('sidebarColor');
+    const resetBtn = document.getElementById('resetBtn');
+    const cardShadows = document.getElementById('cardShadows');
+    const compactMode = document.getElementById('compactMode');
+
+    const STORAGE_KEY = 'siteThemeOptions_v1';
+
+    function applyOptions(opts){
+      if(opts.navColor) {
+        document.documentElement.style.setProperty('--nav-color', opts.navColor);
+        // also derive rgb for rgba() usages
+        const rgb = hexToRgb(opts.navColor);
+        if(rgb) document.documentElement.style.setProperty('--nav-rgb', rgb.join(','));
+      }
+      if(opts.navStyle) document.documentElement.setAttribute('data-nav-style', opts.navStyle);
+      if(opts.brandColor) document.querySelector('.brand')?.style.setProperty('color', opts.brandColor);
+      if(opts.sidebarColor) document.querySelector('.sidebar')?.style.setProperty('background', opts.sidebarColor);
+      if(typeof opts.cardShadows === 'boolean') document.documentElement.style.setProperty('--card-shadow', opts.cardShadows? '0 6px 18px rgba(2,6,23,0.08)':'none');
+      if(typeof opts.compactMode === 'boolean') document.documentElement.setAttribute('data-compact', opts.compactMode? '1':'0');
+      // update UI selections
+      Array.from(swatches.children).forEach(s=> s.classList.toggle('selected', s.dataset.color === opts.navColor));
+      const radios = document.querySelectorAll('input[name="navStyle"]');
+      radios.forEach(r=> r.checked = (r.value === opts.navStyle));
+      brandColorInput.value = opts.brandColor || '#111827';
+      sidebarColorInput.value = opts.sidebarColor || '#0f172a';
+      cardShadows.checked = !!opts.cardShadows;
+      compactMode.checked = !!opts.compactMode;
+    }
+
+    function hexToRgb(hex){
+      if(!hex) return null;
+      const h = hex.replace('#','');
+      if(h.length===3){
+        return [parseInt(h[0]+h[0],16),parseInt(h[1]+h[1],16),parseInt(h[2]+h[2],16)];
+      }
+      if(h.length===6){
+        return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
+      }
+      return null;
+    }
+
+    function saveOptions(opts){ localStorage.setItem(STORAGE_KEY, JSON.stringify(opts)); }
+    function loadOptions(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY))||{} }catch(e){return{}} }
+
+    // init
+    const opts = loadOptions();
+    applyOptions(opts);
+
+    swatches.addEventListener('click', (e)=>{
+      const sw = e.target.closest('.swatch');
+      if(!sw) return;
+      const color = sw.dataset.color;
+      opts.navColor = color;
+      applyOptions(opts);
+      saveOptions(opts);
+    });
+
+    document.querySelectorAll('input[name="navStyle"]').forEach(r=> r.addEventListener('change', (e)=>{
+      opts.navStyle = e.target.value;
+      applyOptions(opts);
+      saveOptions(opts);
+    }));
+
+    brandColorInput.addEventListener('input', (e)=>{
+      opts.brandColor = e.target.value;
+      applyOptions(opts);
+      saveOptions(opts);
+    });
+    sidebarColorInput.addEventListener('input', (e)=>{
+      opts.sidebarColor = e.target.value;
+      applyOptions(opts);
+      saveOptions(opts);
+    });
+
+    cardShadows.addEventListener('change', (e)=>{ opts.cardShadows = e.target.checked; applyOptions(opts); saveOptions(opts); });
+    compactMode.addEventListener('change', (e)=>{ opts.compactMode = e.target.checked; applyOptions(opts); saveOptions(opts); });
+
+    resetBtn.addEventListener('click', ()=>{
+      localStorage.removeItem(STORAGE_KEY);
+      const d = {};
+      applyOptions(d);
+      saveOptions(d);
+      Swal.fire({icon:'success',title:'Opciones reiniciadas',timer:1400,toast:true,position:'top-end',showConfirmButton:false});
+    });
+  </script>
+</body>
+</html>

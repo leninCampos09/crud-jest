@@ -14,6 +14,8 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 
 // servir imágenes subidas desde src/productos en la ruta /productos
 app.use("/productos", express.static(path.join(__dirname, "productos")));
+// servir imágenes subidas desde src/uploads en la ruta /uploads
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/usuarios", usuarioRoutes);
 app.use("/productos", productoRoutes);

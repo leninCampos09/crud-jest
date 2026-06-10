@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Usuarios</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="brand">airframe</div>
+      <div class="profile">
+        <img src="https://i.pravatar.cc/64?img=3" alt="avatar">
+        <div class="meta">
+          <div class="name">Gregorio Carroll</div>
+          <div class="role">International Branding Producer</div>
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/index.html"><i class="fa-solid fa-box"></i><span>Productos</span></a></li>
+          <li class="active has-submenu">
+            <a href="/usuarios.html"><i class="fa-solid fa-users"></i><span>Usuarios</span><i class="fa-solid fa-chevron-right chev"></i></a>
+            <div class="submenu">
+              <a href="/usuarios.html">Todos</a>
+              <a href="#">Nuevo usuario</a>
+            </div>
+          </li>
+
+          <li class="nav-section"><span class="section-title">Ventas</span></li>
+          <li class="has-submenu">
+            <a href="#"><i class="fa-solid fa-chart-line"></i><span>Ventas</span><i class="fa-solid fa-chevron-down chev"></i></a>
+            <div class="submenu">
+              <a href="/dashboard.html">Dashboard</a>
+              <a href="/pedidos.html">Pedidos</a>
+              <a href="/clientes.html">Clientes</a>
+            </div>
+          </li>
+
+          <li class="nav-section"><span class="section-title">Analytics</span></li>
+          <li><a href="/reportes.html"><i class="fa-solid fa-chart-pie"></i><span>Reportes</span></a></li>
+
+          <li class="nav-section"><span class="section-title">Integraciones</span></li>
+          <li><a href="/integraciones.html"><i class="fa-solid fa-plug"></i><span>Integraciones</span></a></li>
+
+          <li class="nav-section"><span class="section-title">Soporte</span></li>
+          <li><a href="/ayuda.html"><i class="fa-solid fa-circle-question"></i><span>Ayuda</span></a></li>
+
+          <li><a href="/configuracion.html"><i class="fa-solid fa-cog"></i><span>Configuración</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div class="topbar">
+          <div class="left">
+            <button id="burgerBtn" class="burger" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+            <div class="page-title">Gestión de Usuarios</div>
+          </div>
+          <div class="right">
+            <div class="topbar-item" style="position:relative;display:inline-block">
+              <button class="icon-btn email" title="Correo" id="emailBtn" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-envelope"></i>
+                <span class="icon-badge">2</span>
+              </button>
+              <div class="dropdown-panel email-panel" id="emailPanel" role="dialog" aria-hidden="true">
+                <div class="dropdown-header">
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                    <div>Messages</div>
+                    <button class="icon-btn" title="Compose" style="width:auto;height:auto;padding:6px"><i class="fa-solid fa-pen-to-square"></i></button>
+                  </div>
+                </div>
+                <div class="dropdown-search" style="padding:8px">
+                  <div class="search-box">
+                    <input type="search" placeholder="Search Messages...">
+                    <button class="icon-btn" aria-label="search" style="width:36px;height:36px"><i class="fa-solid fa-magnifying-glass"></i></button>
+                  </div>
+                </div>
+                <ul class="dropdown-list messages-list">
+                  <li class="msg-item" data-subject="Bienvenida" data-body="Bienvenido al sistema" data-time="1h ago" data-avatar="https://i.pravatar.cc/48?img=21" data-online="true">
+                    <div class="msg-left"><img src="https://i.pravatar.cc/48?img=21" class="msg-avatar"><span class="status-dot online"></span></div>
+                    <div class="msg-body"><div class="msg-top"><strong class="msg-name">Soporte</strong><span class="msg-time">1h</span></div><div class="msg-preview">Bienvenido al sistema.</div></div>
+                  </li>
+                  <li class="msg-item" data-subject="Actualización" data-body="Tu perfil fue actualizado" data-time="2d ago" data-avatar="https://i.pravatar.cc/48?img=22" data-online="false">
+                    <div class="msg-left"><img src="https://i.pravatar.cc/48?img=22" class="msg-avatar"><span class="status-dot offline"></span></div>
+                    <div class="msg-body"><div class="msg-top"><strong class="msg-name">Admin</strong><span class="msg-time">2d</span></div><div class="msg-preview">Tu perfil fue actualizado correctamente.</div></div>
+                  </li>
+                </ul>
+                <div class="dropdown-footer"><a href="#" id="emailViewAll">View All</a></div>
+              </div>
+            </div>
+
+            <div class="topbar-item" style="position:relative;display:inline-block">
+              <button class="icon-btn notif" title="Notificaciones" id="notifBtn" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-bell"></i>
+                <span class="icon-badge">5</span>
+              </button>
+              <div class="dropdown-panel notif-panel" id="notifPanel" role="dialog" aria-hidden="true">
+                <div class="dropdown-header">Activity Feed<div style="float:right" class="muted">3</div></div>
+                <ul class="dropdown-list activity-list">
+                  <li class="activity-item"><div class="activity-icon success"><i class="fa-solid fa-check"></i></div><div class="activity-body"><div class="activity-title"><strong>System</strong> backup completed</div><div class="activity-desc">Backup diario completado.</div><div class="activity-time muted">2d ago</div></div></li>
+                </ul>
+                <div class="dropdown-footer"><a href="#">See All Notifications</a></div>
+              </div>
+            </div>
+
+            <div id="themeToggle" class="switch" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div>
+
+            <div class="topbar-item" style="position:relative;display:inline-block">
+              <button id="userBtn" class="icon-btn" title="Cuenta de usuario" aria-haspopup="true" aria-expanded="false" style="padding:4px;">
+                <img src="https://i.pravatar.cc/48?img=3" alt="Avatar" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:block;">
+                <span class="status-dot user-online" aria-hidden="true" style="position:absolute;right:6px;bottom:6px;width:10px;height:10px;border-radius:50%;border:2px solid var(--card);background:#16a34a"></span>
+              </button>
+              <div class="dropdown-panel" id="userPanel" role="menu" aria-hidden="true">
+                <div class="dropdown-header">Mi cuenta</div>
+                <ul class="dropdown-list" style="padding:8px">
+                  <li class="dropdown-item"><a href="#" id="profileLink"><i class="fa-solid fa-user"></i> Perfil</a></li>
+                  <li class="dropdown-item"><a href="/configuracion.html" id="settingsLink"><i class="fa-solid fa-cog"></i> Configuración</a></li>
+                  <li class="dropdown-item"><a href="#" id="helpLink"><i class="fa-solid fa-circle-question"></i> Ayuda</a></li>
+                  <li class="dropdown-item"><a href="#" id="logoutLink"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="list-header">
+          <h2>Usuarios Registrados</h2>
+          <button id="btnCrearUsuario" class="btn-crear"><i class="fa-solid fa-user-plus"></i> Nuevo</button>
+        </div>
+
+        <!-- User modal -->
+        <div id="userModal" class="modal" aria-hidden="true">
+          <div class="modal-content modal-split">
+            <button id="closeUserModal" class="close">&times;</button>
+            <form id="userForm" class="modal-left">
+              <h3 id="userModalTitle">Crear Usuario</h3>
+              <input type="hidden" id="idUsuario">
+              <label>Nombre</label>
+              <div class="input-icon">
+                <span class="icon" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
+                <input type="text" id="userNombre" name="nombre" required>
+              </div>
+
+              <label>Email</label>
+              <div class="input-icon">
+                <span class="icon" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span>
+                <input type="email" id="userEmail" name="email" required>
+              </div>
+
+              <input type="file" id="userAvatar" name="avatar" accept="image/*" style="display:none;">
+
+              <button type="submit">Guardar Usuario</button>
+            </form>
+
+            <div class="modal-right">
+              <label class="drop-label">Avatar</label>
+              <div id="avatarDrop" class="drop-area">
+                <div class="drop-header">
+                  <span class="drop-icon" aria-hidden="true"><i class="fa-solid fa-image"></i></span>
+                  <span id="avatarDropText" class="drop-text">Arrastra la imagen aquí o haz clic para seleccionar</span>
+                </div>
+                <img id="avatarPreview" class="preview" alt="Vista previa" style="display:none;" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- View user modal -->
+        <div id="userDetailModal" class="modal" aria-hidden="true">
+          <div class="modal-content">
+            <button id="closeUserDetail" class="close">&times;</button>
+            <h3 id="userDetailTitle">Detalle Usuario</h3>
+            <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+              <div><img id="detailAvatar" src="" alt="Avatar" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:1px solid #e5e7eb"></div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div><strong>Nombre:</strong> <span id="detailNombre"></span></div>
+                <div><strong>Email:</strong> <span id="detailEmail"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages full modal (shared with index) -->
+        <div id="messagesModal" class="modal" aria-hidden="true">
+          <div class="modal-content" style="max-width:720px;">
+            <button id="closeMessages" class="close">&times;</button>
+            <h3>Mensajes</h3>
+            <div style="margin-top:12px;">
+              <div id="messagesListModal" style="display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto;padding-right:6px"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-controls">
+          <div class="left-controls">
+            <label class="per-page-label">Mostrar:
+              <select id="perPageSelectUsuarios" class="per-page-select">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+              </select>
+              <span class="per-page-text">registros</span>
+            </label>
+          </div>
+          <div class="right-controls">
+            <label class="search-label">Buscar:</label>
+            <div class="search-wrapper">
+              <input type="search" id="searchInputUsuarios" placeholder="Buscar usuarios...">
+              <button id="clearSearchUsuarios" class="clear-search-btn hidden" aria-label="Limpiar búsqueda">&times;</button>
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaUsuarios"></tbody>
+        </table>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:12px;">
+          <div id="paginationInfoUsuarios" style="color:#374151;font-size:14px;"></div>
+          <div id="paginationUsuarios" style="display:flex;justify-content:center;gap:6px;"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+  <script>
+  (function(){
+      const API = '/usuarios';
+      const tabla = document.getElementById('tablaUsuarios');
+      const perPageSelect = document.getElementById('perPageSelectUsuarios');
+      const searchInput = document.getElementById('searchInputUsuarios');
+      const clearSearchBtn = document.getElementById('clearSearchUsuarios');
+      const paginationEl = document.getElementById('paginationUsuarios');
+      const paginationInfo = document.getElementById('paginationInfoUsuarios');
+
+      const btnCrear = document.getElementById('btnCrearUsuario');
+      const userModal = document.getElementById('userModal');
+      const userForm = document.getElementById('userForm');
+      const closeUserModal = document.getElementById('closeUserModal');
+      const userModalTitle = document.getElementById('userModalTitle');
+      const idField = document.getElementById('idUsuario');
+
+      const userDetailModal = document.getElementById('userDetailModal');
+      const closeUserDetail = document.getElementById('closeUserDetail');
+      const detailNombre = document.getElementById('detailNombre');
+      const detailEmail = document.getElementById('detailEmail');
+      const detailAvatar = document.getElementById('detailAvatar');
+
+      const burger = document.getElementById('burgerBtn');
+      const sidebar = document.querySelector('.sidebar');
+      const themeToggle = document.getElementById('themeToggle');
+
+      let usuarios = [];
+      let currentPage = 1;
+      let perPage = Number(perPageSelect.value || 10);
+
+      function showModal(el){ if(!el) return; el.classList.add('show'); el.setAttribute('aria-hidden','false'); }
+      function hideModal(el){ if(!el) return; el.classList.remove('show'); el.setAttribute('aria-hidden','true'); }
+
+      // Shell controls are initialized globally in /app.js
+
+      function renderTable(data){
+        tabla.innerHTML = '';
+        perPage = Number(perPageSelect.value || perPage);
+        const total = data.length;
+        const totalPages = Math.max(1, Math.ceil(total / perPage));
+        if (currentPage > totalPages) currentPage = totalPages;
+        const start = (currentPage -1) * perPage;
+        const pageItems = data.slice(start, start + perPage);
+        if(pageItems.length === 0){ tabla.innerHTML = '<tr><td colspan="4">No hay usuarios.</td></tr>'; return; }
+        pageItems.forEach(u=>{
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${u.idUsuario || u.id || ''}</td>
+            <td style="display:flex;align-items:center;gap:8px"><img src="${u.avatar || 'https://i.pravatar.cc/48?img=12'}" style="width:36px;height:36px;border-radius:50%;object-fit:cover"> <span>${u.nombre || ''}</span></td>
+            <td>${u.email || ''}</td>
+            <td></td>
+          `;
+          const acciones = tr.querySelector('td:last-child');
+          const btnVer = document.createElement('button'); btnVer.className='btn-ver'; btnVer.title='Ver'; btnVer.innerHTML = '<i class="fa-solid fa-eye"></i>';
+          btnVer.addEventListener('click', ()=> abrirVerUsuario(u));
+          acciones.appendChild(btnVer);
+
+          const btnEditar = document.createElement('button'); btnEditar.className='btn-editar'; btnEditar.textContent='Editar';
+          btnEditar.addEventListener('click', ()=> abrirEditarUsuario(u));
+          acciones.appendChild(btnEditar);
+
+          const btnEliminar = document.createElement('button'); btnEliminar.className='btn-eliminar'; btnEliminar.textContent='Eliminar';
+          btnEliminar.addEventListener('click', ()=> eliminarUsuario(u.idUsuario || u.id));
+          acciones.appendChild(btnEliminar);
+
+          tabla.appendChild(tr);
+        });
+        renderPagination(total);
+      }
+
+      function renderPagination(totalItems){
+        paginationEl.innerHTML = '';
+        perPage = Number(perPageSelect.value || perPage);
+        const totalPages = Math.max(1, Math.ceil(totalItems / perPage));
+        const startItem = totalItems === 0 ? 0 : (currentPage -1)*perPage +1;
+        const endItem = Math.min(totalItems, currentPage*perPage);
+        paginationInfo.textContent = `Mostrando ${startItem} a ${endItem} de ${totalItems} registros`;
+        const btn = (text, disabled, cb) => { const b = document.createElement('button'); b.textContent = text; b.disabled = !!disabled; b.addEventListener('click', cb); return b; };
+        paginationEl.appendChild(btn('Anterior', currentPage <=1, ()=>{ if(currentPage>1){ currentPage--; applyFilters(); }}));
+        const maxButtons=7; let start = Math.max(1, currentPage - Math.floor(maxButtons/2)); let end = Math.min(totalPages, start + maxButtons -1);
+        if(end - start < maxButtons -1) start = Math.max(1, end - maxButtons +1);
+        for(let p=start;p<=end;p++){ const b = document.createElement('button'); b.textContent=String(p); if(p===currentPage){ b.classList.add('active'); b.disabled=true; } else b.addEventListener('click', ()=>{ currentPage=p; applyFilters(); }); paginationEl.appendChild(b); }
+        paginationEl.appendChild(btn('Siguiente', currentPage>= totalPages, ()=>{ if(currentPage < totalPages){ currentPage++; applyFilters(); }}));
+      }
+
+      async function cargarUsuarios(){
+        try{ const res = await fetch(API); if(!res.ok) throw new Error('Error al cargar usuarios'); usuarios = await res.json(); currentPage = 1; applyFilters(); }catch(err){ console.error(err); Swal.fire({icon:'error', title:'Error', text:'No se pudieron cargar usuarios'}); }
+      }
+
+      function applyFilters(){
+        const term = (searchInput && searchInput.value.trim().toLowerCase()) || '';
+        const filtered = usuarios.filter(u=>{ if(!term) return true; const hay = v => (v||'').toString().toLowerCase(); return hay(u.nombre).includes(term) || hay(u.email).includes(term) || hay(u.rol).includes(term); });
+        renderTable(filtered);
+      }
+
+      async function eliminarUsuario(id){
+        if(!id) return; const r = await Swal.fire({title:'Eliminar usuario?', icon:'warning', showCancelButton:true, confirmButtonText:'Sí, eliminar', cancelButtonText:'Cancelar'}); if(!r.isConfirmed) return;
+        try{ const resp = await fetch(`${API}/${id}`, { method:'DELETE' }); if(resp.ok){ Swal.fire({icon:'success', title:'Eliminado'}); await cargarUsuarios(); } else{ const b = await resp.json().catch(()=>({})); Swal.fire({icon:'error', title:'Error', text: b.error || 'No se pudo eliminar'}); } }catch(err){ Swal.fire({icon:'error', title:'Error', text:String(err)}); }
+      }
+
+      function abrirVerUsuario(u){ if(!u) return; detailNombre.textContent = u.nombre || ''; detailEmail.textContent = u.email || ''; detailAvatar.src = u.avatar || 'https://i.pravatar.cc/80?img=12'; showModal(userDetailModal); }
+      function abrirEditarUsuario(u){ if(!u) return; idField.value = u.idUsuario || u.id || ''; document.getElementById('userNombre').value = u.nombre || ''; document.getElementById('userEmail').value = u.email || ''; userModalTitle.textContent = 'Editar Usuario';
+        // set preview
+        const preview = document.getElementById('avatarPreview'); const dropText = document.getElementById('avatarDropText'); const avatarInput = document.getElementById('userAvatar');
+        if(preview && dropText){ if(u.avatar){ preview.src = u.avatar; preview.style.display='block'; dropText.style.display='none'; } else { preview.src=''; preview.style.display='none'; dropText.style.display='block'; } }
+        if(avatarInput) avatarInput.value='';
+        showModal(userModal);
+      }
+      function abrirCrearUsuario(){ userForm.reset(); idField.value = ''; userModalTitle.textContent = 'Crear Usuario'; const preview = document.getElementById('avatarPreview'); const dropText = document.getElementById('avatarDropText'); const avatarInput = document.getElementById('userAvatar'); if(preview){ preview.src=''; preview.style.display='none'; } if(dropText){ dropText.style.display='block'; } if(avatarInput) avatarInput.value=''; showModal(userModal); }
+
+      // submit using FormData to include avatar file
+      userForm.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const nombre = document.getElementById('userNombre').value;
+        const email = document.getElementById('userEmail').value;
+        const id = idField.value;
+        try{
+          const url = id ? `${API}/${id}` : API;
+          const method = id ? 'PUT' : 'POST';
+          const fd = new FormData();
+          fd.append('nombre', nombre);
+          fd.append('email', email);
+          const fileInput = document.getElementById('userAvatar');
+          if(fileInput && fileInput.files && fileInput.files[0]) fd.append('avatar', fileInput.files[0]);
+          const res = await fetch(url, { method, body: fd });
+          if(res.ok){ Swal.fire({icon:'success', title: id ? 'Actualizado' : 'Creado'}); hideModal(userModal); await cargarUsuarios(); } else{ const b = await res.json().catch(()=>({})); Swal.fire({icon:'error', title:'Error', text: b.error || 'No se pudo guardar'}); }
+        }catch(err){ Swal.fire({icon:'error', title:'Error', text:String(err)}); }
+      });
+
+      function initUI(){
+        const collapsed = localStorage.getItem('sidebarCollapsed') === '1'; if(collapsed) sidebar.classList.add('collapsed');
+        const theme = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); if(theme === 'dark') document.body.classList.add('dark'); if(themeToggle && theme === 'dark') themeToggle.classList.add('on');
+        if(burger) burger.addEventListener('click', ()=>{ sidebar.classList.toggle('collapsed'); localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed') ? '1' : '0'); });
+        if(themeToggle) themeToggle.addEventListener('click', ()=>{ document.body.classList.toggle('dark'); const on = document.body.classList.contains('dark'); themeToggle.classList.toggle('on', on); localStorage.setItem('theme', on ? 'dark' : 'light'); themeToggle.setAttribute('aria-checked', on? 'true':'false'); });
+        if(themeToggle) themeToggle.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') themeToggle.click(); });
+        if(closeUserModal) closeUserModal.addEventListener('click', ()=> hideModal(userModal));
+        if(userModal) userModal.addEventListener('click', (e)=>{ if(e.target === userModal) hideModal(userModal); });
+        if(closeUserDetail) closeUserDetail.addEventListener('click', ()=> hideModal(userDetailModal));
+        if(userDetailModal) userDetailModal.addEventListener('click', (e)=>{ if(e.target === userDetailModal) hideModal(userDetailModal); });
+        if(btnCrear) btnCrear.addEventListener('click', abrirCrearUsuario);
+        // drag & drop for avatar
+        const drop = document.getElementById('avatarDrop');
+        const avatarInput = document.getElementById('userAvatar');
+        if(drop && avatarInput){
+          drop.addEventListener('click', ()=> avatarInput.click());
+          drop.addEventListener('dragover', (e)=>{ e.preventDefault(); drop.classList.add('dragover'); });
+          drop.addEventListener('dragleave', ()=> drop.classList.remove('dragover'));
+          drop.addEventListener('drop', (e)=>{ e.preventDefault(); drop.classList.remove('dragover'); const dt = e.dataTransfer; if(!dt) return; const f = dt.files[0]; if(f && f.type.startsWith('image/')) { avatarInput.files = dt.files; const preview = document.getElementById('avatarPreview'); const dropText = document.getElementById('avatarDropText'); if(preview){ preview.src = URL.createObjectURL(f); preview.style.display='block'; } if(dropText){ dropText.style.display='none'; } } });
+          avatarInput.addEventListener('change', ()=>{ const f = avatarInput.files && avatarInput.files[0]; const preview = document.getElementById('avatarPreview'); const dropText = document.getElementById('avatarDropText'); if(f){ if(preview){ preview.src = URL.createObjectURL(f); preview.style.display='block'; } if(dropText){ dropText.style.display='none'; } } else { if(preview){ preview.src=''; preview.style.display='none'; } if(dropText){ dropText.style.display='block'; } } });
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', ()=>{
+        if(perPageSelect){ const stored = localStorage.getItem('perPageUsuarios'); if(stored) perPageSelect.value = stored; perPageSelect.addEventListener('change', ()=>{ localStorage.setItem('perPageUsuarios', String(perPageSelect.value)); currentPage =1; applyFilters(); }); }
+        if(searchInput){ let t=null; searchInput.addEventListener('input', ()=>{ clearSearchBtn.style.display = searchInput.value ? 'inline-block' : 'none'; clearTimeout(t); t = setTimeout(()=>{ currentPage=1; applyFilters(); }, 250); }); }
+        if(clearSearchBtn) clearSearchBtn.addEventListener('click', ()=>{ searchInput.value=''; clearSearchBtn.style.display='none'; currentPage=1; applyFilters(); if(searchInput) searchInput.focus(); });
+        initUI();
+        cargarUsuarios();
+        if (typeof setupTopbarDropdowns === 'function') setupTopbarDropdowns();
+      });
+    })();
+  </script>
+</body>
+</html>

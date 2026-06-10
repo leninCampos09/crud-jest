@@ -12,123 +12,331 @@
   <meta name="robots" content="noindex">
 </head>
 <body>
+  <div class="app-container">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="brand">airframe</div>
+      <div class="profile">
+        <img src="https://i.pravatar.cc/64?img=5" alt="avatar">
+        <div class="meta">
+          <div class="name">Gregorio Carroll</div>
+          <div class="role">International Branding Producer</div>
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li class="active has-submenu">
+            <a href="/index.html"><i class="fa-solid fa-box"></i><span>Productos</span><i class="fa-solid fa-chevron-right chev"></i></a>
+            <div class="submenu">
+              <a href="/index.html">Todos</a>
+              <a href="#">Nuevo producto</a>
+            </div>
+          </li>
+          <li class="has-submenu">
+            <a href="/usuarios.html"><i class="fa-solid fa-users"></i><span>Usuarios</span><i class="fa-solid fa-chevron-right chev"></i></a>
+            <div class="submenu">
+              <a href="/usuarios.html">Todos</a>
+              <a href="#">Nuevo usuario</a>
+            </div>
+          </li>
 
-  <h1>Gestión de Productos</h1>
+          <li class="nav-section"><span class="section-title">Ventas</span></li>
+          <li class="has-submenu">
+            <a href="#"><i class="fa-solid fa-chart-line"></i><span>Ventas</span><i class="fa-solid fa-chevron-down chev"></i></a>
+            <div class="submenu">
+              <a href="/dashboard.html">Dashboard</a>
+              <a href="/pedidos.html">Pedidos</a>
+              <a href="/clientes.html">Clientes</a>
+            </div>
+          </li>
 
-  <div class="list-header">
-    <h2>Productos Registrados</h2>
-    <button id="btnCrear" class="btn-crear" aria-label="Crear producto">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span>Crear Producto</span>
-    </button>
-  </div>
+          <li class="nav-section"><span class="section-title">Analytics</span></li>
+          <li><a href="/reportes.html"><i class="fa-solid fa-chart-pie"></i><span>Reportes</span></a></li>
 
-  <div id="modal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-      <button id="closeModal" class="close">&times;</button>
-      <h3 id="modalTitle">Crear Producto</h3>
-      <form id="productoForm">
-        <input type="hidden" id="idProducto">
-        <label>Nombre</label>
-        <div class="input-icon">
-          <span class="icon" aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
-          <input type="text" id="nombre" name="nombre" required>
+          <li class="nav-section"><span class="section-title">Integraciones</span></li>
+          <li><a href="/integraciones.html"><i class="fa-solid fa-plug"></i><span>Integraciones</span></a></li>
+
+          <li class="nav-section"><span class="section-title">Soporte</span></li>
+          <li><a href="/ayuda.html"><i class="fa-solid fa-circle-question"></i><span>Ayuda</span></a></li>
+
+          <li><a href="/configuracion.html"><i class="fa-solid fa-cog"></i><span>Configuración</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div class="topbar">
+          <div class="left">
+            <button id="burgerBtn" class="burger" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+            <div class="page-title">Gestión de Productos</div>
+          </div>
+          <div class="right">
+            <div class="topbar-item" style="position:relative;display:inline-block">
+              <button class="icon-btn email" title="Correo" id="emailBtn" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-envelope"></i>
+                <span class="icon-badge">3</span>
+              </button>
+              <div class="dropdown-panel email-panel" id="emailPanel" role="dialog" aria-hidden="true">
+                <div class="dropdown-header">
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                    <div>Messages</div>
+                    <button class="icon-btn" title="Compose" style="width:auto;height:auto;padding:6px"><i class="fa-solid fa-pen-to-square"></i></button>
+                  </div>
+                </div>
+                <div class="dropdown-search" style="padding:8px">
+                  <div class="search-box">
+                    <input type="search" placeholder="Search Messages...">
+                    <button class="icon-btn" aria-label="search" style="width:36px;height:36px"><i class="fa-solid fa-magnifying-glass"></i></button>
+                  </div>
+                </div>
+                <ul class="dropdown-list messages-list">
+                  <li class="msg-item" data-subject="Nuevo pedido" data-body="Tienes 1 pedido pendiente. Pedido #789: 2x Pañales" data-time="2m ago" data-avatar="https://i.pravatar.cc/48?img=12" data-online="true">
+                    <div class="msg-left">
+                      <img src="https://i.pravatar.cc/48?img=12" class="msg-avatar" alt="avatar">
+                      <span class="status-dot online"></span>
+                    </div>
+                    <div class="msg-body">
+                      <div class="msg-top"><strong class="msg-name">Vince Kiehn</strong><span class="msg-count">(23)</span><span class="msg-time">2m</span></div>
+                      <div class="msg-preview">Tienes 1 pedido pendiente. Pedido #789: 2x Pañales Baby Dry S7.</div>
+                    </div>
+                  </li>
+                  <li class="msg-item" data-subject="Soporte: ticket #123" data-body="Hemos respondido a tu solicitud: Por favor verifica los detalles adjuntos." data-time="1h ago" data-avatar="https://i.pravatar.cc/48?img=13" data-online="false">
+                    <div class="msg-left">
+                      <img src="https://i.pravatar.cc/48?img=13" class="msg-avatar" alt="avatar">
+                      <span class="status-dot offline"></span>
+                    </div>
+                    <div class="msg-body">
+                      <div class="msg-top"><strong class="msg-name">Jaunita Hackett</strong><span class="msg-count">(4)</span><span class="msg-time">1h</span></div>
+                      <div class="msg-preview">Hemos respondido a tu ticket #123. Revisa la solución propuesta en el panel de soporte.</div>
+                    </div>
+                  </li>
+                  <li class="msg-item" data-subject="Factura disponible" data-body="Tu factura #2023 está lista para descargar." data-time="3h ago" data-avatar="https://i.pravatar.cc/48?img=14" data-online="true">
+                    <div class="msg-left">
+                      <img src="https://i.pravatar.cc/48?img=14" class="msg-avatar" alt="avatar">
+                      <span class="status-dot online"></span>
+                    </div>
+                    <div class="msg-body">
+                      <div class="msg-top"><strong class="msg-name">Accounting</strong><span class="msg-count">(1)</span><span class="msg-time">3h</span></div>
+                      <div class="msg-preview">Tu factura #2023 ya está disponible en tu panel de facturación.</div>
+                    </div>
+                  </li>
+                  <li class="msg-item" data-subject="Promoción" data-body="20% descuento en Pañales hasta medianoche." data-time="5h ago" data-avatar="https://i.pravatar.cc/48?img=15" data-online="false">
+                    <div class="msg-left">
+                      <img src="https://i.pravatar.cc/48?img=15" class="msg-avatar" alt="avatar">
+                      <span class="status-dot offline"></span>
+                    </div>
+                    <div class="msg-body">
+                      <div class="msg-top"><strong class="msg-name">Marketing</strong><span class="msg-count">(5)</span><span class="msg-time">5h</span></div>
+                      <div class="msg-preview">20% de descuento en Pañales Baby Dry S7 solo hoy.</div>
+                    </div>
+                  </li>
+                  <li class="msg-item" data-subject="Recordatorio" data-body="Reunión con proveedor mañana 10:00 AM." data-time="1d ago" data-avatar="https://i.pravatar.cc/48?img=16" data-online="true">
+                    <div class="msg-left">
+                      <img src="https://i.pravatar.cc/48?img=16" class="msg-avatar" alt="avatar">
+                      <span class="status-dot online"></span>
+                    </div>
+                    <div class="msg-body">
+                      <div class="msg-top"><strong class="msg-name">Admin</strong><span class="msg-count">(2)</span><span class="msg-time">1d</span></div>
+                      <div class="msg-preview">Reunión con proveedor confirmada para mañana a las 10:00 AM.</div>
+                    </div>
+                  </li>
+                  <li class="msg-item" data-subject="Backup completado" data-body="La copia de seguridad diaria se completó con éxito." data-time="2d ago" data-avatar="https://i.pravatar.cc/48?img=17" data-online="false">
+                    <div class="msg-left">
+                      <img src="https://i.pravatar.cc/48?img=17" class="msg-avatar" alt="avatar">
+                      <span class="status-dot offline"></span>
+                    </div>
+                    <div class="msg-body">
+                      <div class="msg-top"><strong class="msg-name">Sistema</strong><span class="msg-count">(0)</span><span class="msg-time">2d</span></div>
+                      <div class="msg-preview">Backup diario completado correctamente. No se detectaron errores.</div>
+                    </div>
+                  </li>
+                </ul>
+                <div class="dropdown-footer"><a href="#" id="emailViewAll">View All</a></div>
+              </div>
+            </div>
+
+            <div class="topbar-item" style="position:relative;display:inline-block">
+              <button class="icon-btn notif" title="Notificaciones" id="notifBtn" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-bell"></i>
+                <span class="icon-badge">7</span>
+              </button>
+              <div class="dropdown-panel notif-panel" id="notifPanel" role="dialog" aria-hidden="true">
+                <div class="dropdown-header">Activity Feed<div style="float:right" class="muted">4</div></div>
+                <ul class="dropdown-list activity-list">
+                  <li class="activity-item">
+                    <div class="activity-icon success"><i class="fa-solid fa-check"></i></div>
+                    <div class="activity-body">
+                      <div class="activity-title"><strong>Lonie Pfannerstill</strong> changed Description to "lime data Recycled"</div>
+                      <div class="activity-desc">Tempora trans cicilium abduco tersus astrum audentia.</div>
+                      <div class="activity-time muted">Wed Jun 25 2025 03:47:30 GMT-0600</div>
+                    </div>
+                  </li>
+                  <li class="activity-item">
+                    <div class="activity-icon danger"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="activity-body">
+                      <div class="activity-title"><strong>Blair Ward</strong> changed Description to "Trans out Northwest"</div>
+                      <div class="activity-desc">Ciminatio trucido tabula bonus civitas accusamus studio templum.</div>
+                      <div class="activity-time muted">Thu Apr 02 2026 13:50:09 GMT-0600</div>
+                    </div>
+                  </li>
+                </ul>
+                <div class="dropdown-footer"><a href="#">See All Notifications</a></div>
+              </div>
+            </div>
+            <div id="themeToggle" class="switch" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div>
+            <div class="topbar-item" style="position:relative;display:inline-block">
+              <button id="userBtn" class="icon-btn" title="Cuenta de usuario" aria-haspopup="true" aria-expanded="false" style="padding:4px;">
+                <img src="https://i.pravatar.cc/48?img=3" alt="Avatar" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:block;">
+                <span class="status-dot user-online" aria-hidden="true" style="position:absolute;right:6px;bottom:6px;width:10px;height:10px;border-radius:50%;border:2px solid var(--card);background:#16a34a"></span>
+              </button>
+              <div class="dropdown-panel" id="userPanel" role="menu" aria-hidden="true">
+                <div class="dropdown-header">Mi cuenta</div>
+                <ul class="dropdown-list" style="padding:8px">
+                  <li class="dropdown-item"><a href="#" id="profileLink"><i class="fa-solid fa-user"></i> Perfil</a></li>
+                  <li class="dropdown-item"><a href="/configuracion.html" id="settingsLink"><i class="fa-solid fa-cog"></i> Configuración</a></li>
+                  <li class="dropdown-item"><a href="#" id="helpLink"><i class="fa-solid fa-circle-question"></i> Ayuda</a></li>
+                  <li class="dropdown-item"><a href="#" id="logoutLink"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="list-header">
+          <h2>Productos Registrados</h2>
+          <button id="btnCrear" class="btn-crear" aria-label="Crear producto">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Crear Producto</span>
+          </button>
         </div>
 
-        <label>Precio</label>
-        <div class="input-icon">
-          <span class="icon" aria-hidden="true"><i class="fa-solid fa-dollar-sign"></i></span>
-          <div class="money-field">
-            <span class="money-prefix">$</span>
-            <input type="text" id="precio" name="precio" required>
+        <div id="modal" class="modal" aria-hidden="true">
+          <div class="modal-content modal-split">
+            <button id="closeModal" class="close">&times;</button>
+            <form id="productoForm" class="modal-left">
+              <h3 id="modalTitle">Crear Producto</h3>
+              <input type="hidden" id="idProducto">
+              <label>Nombre</label>
+              <div class="input-icon">
+                <span class="icon" aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
+                <input type="text" id="nombre" name="nombre" required>
+              </div>
+
+              <label>Precio</label>
+              <div class="input-icon money-input">
+                <div class="money-field">
+                  <span class="money-prefix">$</span>
+                  <input type="text" id="precio" name="precio" required>
+                </div>
+              </div>
+
+              <label>Descripción</label>
+              <div class="input-icon">
+                <span class="icon" aria-hidden="true"><i class="fa-solid fa-align-left"></i></span>
+                <input type="text" id="descripcion" name="descripcion">
+              </div>
+
+              <input type="file" id="imagen" name="imagen" accept="image/*" style="display:none;">
+
+              <button type="submit">Guardar Producto</button>
+            </form>
+
+            <div class="modal-right">
+              <label class="drop-label">Imagen (portada)</label>
+              <div id="dropArea" class="drop-area">
+                <div class="drop-header">
+                  <span class="drop-icon" aria-hidden="true"><i class="fa-solid fa-image"></i></span>
+                  <span class="drop-text">Arrastra la imagen aquí o haz clic para seleccionar</span>
+                </div>
+                <img id="previewImg" class="preview" alt="Vista previa" style="display:none;" />
+              </div>
+            </div>
           </div>
         </div>
 
-        <label>Descripción</label>
-        <div class="input-icon">
-          <span class="icon" aria-hidden="true"><i class="fa-solid fa-align-left"></i></span>
-          <input type="text" id="descripcion" name="descripcion">
+        <!-- Detail modal -->
+        <div id="detailModal" class="modal" aria-hidden="true">
+          <div class="modal-content">
+            <button id="closeDetail" class="close">&times;</button>
+            <h3 id="detailTitle">Detalle del Producto</h3>
+            <div style="display:flex;gap:16px;align-items:flex-start;margin-top:12px;">
+              <img id="detailImage" src="" alt="Imagen" style="width:160px;height:160px;object-fit:cover;border-radius:8px;display:block;" />
+              <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+                <div><strong>Nombre:</strong> <span id="detailName"></span></div>
+                <div><strong>Precio:</strong> <span id="detailPrice"></span></div>
+                <div><strong>Descripción:</strong></div>
+                <div id="detailDescription" style="white-space:pre-wrap;color:#374151"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages full modal -->
+          <div id="messagesModal" class="modal" aria-hidden="true">
+            <div class="modal-content" style="max-width:720px;">
+              <button id="closeMessages" class="close">&times;</button>
+              <h3>Mensajes</h3>
+              <div style="margin-top:12px;">
+                <div id="messagesListModal" style="display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto;padding-right:6px"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <label>Imagen (portada)</label>
-        <div id="dropArea" class="drop-area" style="position:relative;">
-          <span class="drop-icon" aria-hidden="true"><i class="fa-solid fa-image"></i></span>
-          <span class="drop-text">Arrastra la imagen aquí o haz clic para seleccionar</span>
-          <img id="previewImg" class="preview" alt="Vista previa" style="display:none;" />
-          <input type="file" id="imagen" name="imagen" accept="image/*" style="display:none;">
+        <div class="table-controls">
+          <div class="left-controls">
+            <label class="per-page-label">Mostrar:
+              <select id="perPageSelect" class="per-page-select">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+              <span class="per-page-text">registros</span>
+            </label>
+          </div>
+          <div class="right-controls">
+            <label class="search-label">Buscar:</label>
+            <div class="search-wrapper">
+              <input type="search" id="searchInput" placeholder="Buscar...">
+              <button id="clearSearchBtn" class="clear-search-btn hidden" aria-label="Limpiar búsqueda">&times;</button>
+            </div>
+          </div>
         </div>
 
-        <button type="submit">Guardar Producto</button>
-      </form>
-    </div>
-  </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Portada</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Descripción</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaProductos"></tbody>
+        </table>
 
-  <!-- Detail modal -->
-  <div id="detailModal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-      <button id="closeDetail" class="close">&times;</button>
-      <h3 id="detailTitle">Detalle del Producto</h3>
-      <div style="display:flex;gap:16px;align-items:flex-start;margin-top:12px;">
-        <img id="detailImage" src="" alt="Imagen" style="width:160px;height:160px;object-fit:cover;border-radius:8px;display:block;" />
-        <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
-          <div><strong>Nombre:</strong> <span id="detailName"></span></div>
-          <div><strong>Precio:</strong> <span id="detailPrice"></span></div>
-          <div><strong>Descripción:</strong></div>
-          <div id="detailDescription" style="white-space:pre-wrap;color:#374151"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:12px;">
+          <div id="paginationInfo" style="color:#374151;font-size:14px;"></div>
+          <div id="pagination" style="display:flex;justify-content:center;gap:6px;"></div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="table-controls">
-    <div class="left-controls">
-      <label class="per-page-label">Mostrar:
-        <select id="perPageSelect" class="per-page-select">
-          <option value="5">5</option>
-          <option value="10" selected>10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-        </select>
-        <span class="per-page-text">registros</span>
-      </label>
-    </div>
-    <div class="right-controls">
-      <label class="search-label">Buscar:</label>
-      <div class="search-wrapper">
-        <input type="search" id="searchInput" placeholder="Buscar...">
-        <button id="clearSearchBtn" class="clear-search-btn hidden" aria-label="Limpiar búsqueda">&times;</button>
-      </div>
-    </div>
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Portada</th>
-        <th>Nombre</th>
-        <th>Precio</th>
-        <th>Descripción</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="tablaProductos"></tbody>
-  </table>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:12px;">
-    <div id="paginationInfo" style="color:#374151;font-size:14px;"></div>
-    <div id="pagination" style="display:flex;justify-content:center;gap:6px;"></div>
-  </div>
-
-  <div id="loadingOverlay" class="loading-overlay" style="display:none;">
-    <div class="spinner" aria-hidden="true"></div>
+        <div id="loadingOverlay" class="loading-overlay" style="display:none;">
+          <div class="spinner" aria-hidden="true"></div>
+        </div>
+      </section>
+    </main>
   </div>
 
   <script src="/app.js"></script>
 
   <script>
+  // Keep only sort-icon injection here; shell controls handled by app.js
   document.addEventListener('DOMContentLoaded', function(){
     const ths = Array.from(document.querySelectorAll('table thead th'));
     ths.forEach((th, idx) => {

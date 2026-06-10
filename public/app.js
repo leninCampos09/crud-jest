@@ -1,4 +1,62 @@
 const API_URL = "/productos";
+// Apply saved theme options (so configuration persists across pages)
+(function () {
+  try {
+    const STORAGE_KEY = "siteThemeOptions_v1";
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const opts = JSON.parse(raw);
+      if (opts.navColor) {
+        document.documentElement.style.setProperty(
+          "--nav-color",
+          opts.navColor,
+        );
+        // derive rgb
+        const h = opts.navColor.replace("#", "");
+        let rgb = null;
+        if (h.length === 3)
+          rgb = [
+            parseInt(h[0] + h[0], 16),
+            parseInt(h[1] + h[1], 16),
+            parseInt(h[2] + h[2], 16),
+          ];
+        else if (h.length === 6)
+          rgb = [
+            parseInt(h.slice(0, 2), 16),
+            parseInt(h.slice(2, 4), 16),
+            parseInt(h.slice(4, 6), 16),
+          ];
+        if (rgb)
+          document.documentElement.style.setProperty(
+            "--nav-rgb",
+            rgb.join(","),
+          );
+      }
+      if (opts.brandColor)
+        document
+          .querySelector(".brand")
+          ?.style.setProperty("color", opts.brandColor);
+      if (opts.sidebarColor)
+        document
+          .querySelector(".sidebar")
+          ?.style.setProperty("background", opts.sidebarColor);
+      if (opts.navStyle === "dark") document.body.classList.add("dark");
+      else document.body.classList.remove("dark");
+      if (typeof opts.cardShadows === "boolean")
+        document.documentElement.style.setProperty(
+          "--card-shadow",
+          opts.cardShadows ? "0 6px 18px rgba(2,6,23,0.08)" : "none",
+        );
+      if (typeof opts.compactMode === "boolean")
+        document.documentElement.setAttribute(
+          "data-compact",
+          opts.compactMode ? "1" : "0",
+        );
+    }
+  } catch (e) {
+    console.warn("applySavedTheme error", e);
+  }
+})();
 
 // Toast mixin with longer default duration
 const Toast = Swal.mixin({
@@ -46,7 +104,45 @@ function hideLoading() {
 }
 
 async function cargarProductos() {
+  // setup submenu toggles (only once)
+  if (!setupShellControls._submenusBound) {
+    setupSidebarSubmenus();
+    setupShellControls._submenusBound = true;
+  }
   showLoading();
+
+  // Submenu toggling: finds .has-submenu items and wires chevrons
+  function setupSidebarSubmenus() {
+    const sidebar = document.querySelector(".sidebar");
+    if (!sidebar) return;
+    const items = Array.from(sidebar.querySelectorAll("li"));
+    items.forEach((li) => {
+      const submenu = li.querySelector(".submenu");
+      if (submenu) {
+        li.classList.add("has-submenu");
+        const link = li.querySelector("a");
+        const chev = link.querySelector(".chev");
+        if (chev && !chev.dataset.bound) {
+          chev.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const open = li.classList.toggle("open");
+            link.setAttribute("aria-expanded", open ? "true" : "false");
+          });
+          chev.dataset.bound = "1";
+        }
+        // also allow clicking the parent link area (except actual navigation)
+        link.addEventListener("click", (e) => {
+          // if the href is '#', toggle instead of navigating
+          const href = link.getAttribute("href");
+          if (href === "#" || href === "") {
+            e.preventDefault();
+            li.classList.toggle("open");
+          }
+        });
+      }
+    });
+  }
   try {
     const res = await fetch(API_URL);
     if (!res.ok) throw new Error("Error al obtener productos");
@@ -357,12 +453,19 @@ formulario.addEventListener("submit", async (e) => {
         await cargarProductos();
         closeModal();
       } else {
-        const b = await res.json().catch(() => ({}));
+        let b = {};
+        try {
+          b = await res.json();
+        } catch (e) {
+          const txt = await res.text().catch(() => "");
+          b = { error: txt || `HTTP ${res.status}` };
+        }
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: b.error || "No se pudo crear",
+          text: b.error || b.details || "No se pudo crear",
         });
+        console.error("Create product failed:", b);
       }
     } else {
       const body = { nombre, precio, descripcion };
@@ -385,12 +488,19 @@ formulario.addEventListener("submit", async (e) => {
         await cargarProductos();
         closeModal();
       } else {
-        const b = await res.json().catch(() => ({}));
+        let b = {};
+        try {
+          b = await res.json();
+        } catch (e) {
+          const txt = await res.text().catch(() => "");
+          b = { error: txt || `HTTP ${res.status}` };
+        }
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: b.error || "No se pudo crear",
+          text: b.error || b.details || "No se pudo crear",
         });
+        console.error("Create product failed:", b);
       }
     }
   } catch (err) {
@@ -462,102 +572,383 @@ function closeModal() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupImageDragDrop();
-  if (perPageSelect) {
-    // restore per-page selection from localStorage (persist user's choice)
-    const storedPer = localStorage.getItem("perPage");
-    if (storedPer) {
-      perPageSelect.value = storedPer;
-      perPage = Number(storedPer || perPage);
-    }
+  const isProductsPage = Boolean(
+    document.getElementById("tablaProductos") ||
+    document.getElementById("productoForm"),
+  );
 
-    perPageSelect.addEventListener("change", () => {
-      // persist selection and re-render
-      localStorage.setItem("perPage", String(perPageSelect.value));
-      currentPage = 1;
-      applyFiltersAndRender();
-    });
-  }
-  if (searchInput) {
-    let t = null;
-    searchInput.addEventListener("input", () => {
-      clearSearchBtn.style.display = searchInput.value
-        ? "inline-block"
-        : "none";
-      clearTimeout(t);
-      t = setTimeout(() => {
+  if (isProductsPage) {
+    // product page initialization
+    setupImageDragDrop();
+    if (perPageSelect) {
+      const storedPer = localStorage.getItem("perPage");
+      if (storedPer) {
+        perPageSelect.value = storedPer;
+        perPage = Number(storedPer || perPage);
+      }
+      perPageSelect.addEventListener("change", () => {
+        localStorage.setItem("perPage", String(perPageSelect.value));
         currentPage = 1;
         applyFiltersAndRender();
-      }, 250);
+      });
+    }
+
+    if (searchInput) {
+      let t = null;
+      searchInput.addEventListener("input", () => {
+        clearSearchBtn.style.display = searchInput.value
+          ? "inline-block"
+          : "none";
+        clearTimeout(t);
+        t = setTimeout(() => {
+          currentPage = 1;
+          applyFiltersAndRender();
+        }, 250);
+      });
+    }
+    if (clearSearchBtn)
+      clearSearchBtn.addEventListener("click", () => {
+        if (searchInput) searchInput.value = "";
+        clearSearchBtn.style.display = "none";
+        currentPage = 1;
+        applyFiltersAndRender();
+        if (searchInput) searchInput.focus();
+      });
+
+    // sorting headers
+    const keys = [
+      "idProducto",
+      "imagen",
+      "nombre",
+      "precio",
+      "descripcion",
+      null,
+    ];
+    const ths = document.querySelectorAll("table thead th");
+    ths.forEach((th, idx) => {
+      const key = keys[idx];
+      if (!key) return;
+      th.style.cursor = "pointer";
+      th.addEventListener("click", () => {
+        if (sortKey !== key) {
+          sortKey = key;
+          sortDir = "asc";
+        } else sortDir = sortDir === "asc" ? "desc" : "asc";
+        ths.forEach((t) => {
+          t.classList.remove("sorted-asc", "sorted-desc");
+          const ic = t.querySelector(".sort-icon");
+          if (ic) ic.className = "fa-solid fa-sort sort-icon";
+        });
+        if (sortDir === "asc") {
+          th.classList.add("sorted-asc");
+          const ic = th.querySelector(".sort-icon");
+          if (ic) ic.className = "fa-solid fa-sort-up sort-icon";
+        } else {
+          th.classList.add("sorted-desc");
+          const ic = th.querySelector(".sort-icon");
+          if (ic) ic.className = "fa-solid fa-sort-down sort-icon";
+        }
+        applyFiltersAndRender();
+      });
+    });
+
+    if (btnCrear)
+      btnCrear.addEventListener("click", () => {
+        const pf = document.getElementById("productoForm");
+        if (pf) pf.reset();
+        const preview = document.getElementById("previewImg");
+        if (preview) preview.style.display = "none";
+        const idEl = document.getElementById("idProducto");
+        if (idEl) idEl.value = "";
+        if (modalTitle) modalTitle.textContent = "Crear Producto";
+        editingId = null;
+        openModal();
+      });
+
+    if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
+    const closeDetailBtn = document.getElementById("closeDetail");
+    if (closeDetailBtn)
+      closeDetailBtn.addEventListener("click", closeDetailModal);
+    if (modal)
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+    const detailModal = document.getElementById("detailModal");
+    if (detailModal)
+      detailModal.addEventListener("click", (e) => {
+        if (e.target === detailModal) closeDetailModal();
+      });
+
+    cargarProductos();
+  }
+
+  // setup topbar dropdowns for email and notifications if present
+  if (typeof setupTopbarDropdowns === "function") setupTopbarDropdowns();
+
+  // wire email view all link to open messages modal
+  const emailViewAll = document.getElementById("emailViewAll");
+  const messagesModal = document.getElementById("messagesModal");
+  const closeMessages = document.getElementById("closeMessages");
+  const messagesListModal = document.getElementById("messagesListModal");
+  if (emailViewAll && messagesModal && messagesListModal) {
+    emailViewAll.addEventListener("click", (e) => {
+      e.preventDefault();
+      const emailPanel = document.getElementById("emailPanel");
+      // If panel exists, toggle expanded view inside the dropdown (show all messages)
+      if (emailPanel) {
+        const expanded = emailPanel.classList.toggle("expanded");
+        emailViewAll.textContent = expanded ? "Show Less" : "View All";
+        // ensure panel is open and repositioned when expanded
+        if (expanded) {
+          emailPanel.classList.add("open");
+          positionPanel(document.getElementById("emailBtn"), emailPanel);
+        }
+        return;
+      }
+      // fallback: populate messages modal from small panel items
+      const smallItems = document.querySelectorAll(".email-panel .msg-item");
+      messagesListModal.innerHTML = "";
+      smallItems.forEach((it) => {
+        const subj = it.getAttribute("data-subject") || "(sin asunto)";
+        const body = it.getAttribute("data-body") || "";
+        const time = it.getAttribute("data-time") || "";
+        const avatar =
+          it.getAttribute("data-avatar") || "/uploads/default-avatar.png";
+        const online = it.getAttribute("data-online") === "true";
+        const wrap = document.createElement("div");
+        wrap.className = "msg-item";
+        wrap.style.display = "flex";
+        wrap.style.gap = "10px";
+        wrap.style.padding = "10px";
+        wrap.style.borderBottom = "1px solid rgba(0,0,0,0.04)";
+        wrap.innerHTML = `
+          <div style="width:56px;flex-shrink:0;position:relative">
+            <img src="${avatar}" style="width:48px;height:48px;border-radius:50%;object-fit:cover">
+            <span style="position:absolute;bottom:6px;left:40px;width:10px;height:10px;border-radius:50%;border:2px solid var(--card);background:${online ? "#16a34a" : "#ef4444"}"></span>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px"><strong>${subj}</strong><span style="color:var(--muted);font-size:12px;margin-left:auto">${time}</span></div>
+            <div style="color:var(--muted);margin-top:6px">${body}</div>
+          </div>
+        `;
+        messagesListModal.appendChild(wrap);
+      });
+      messagesModal.classList.add("show");
+      messagesModal.setAttribute("aria-hidden", "false");
     });
   }
-  if (clearSearchBtn)
-    clearSearchBtn.addEventListener("click", () => {
-      if (searchInput) searchInput.value = "";
-      clearSearchBtn.style.display = "none";
-      currentPage = 1;
-      applyFiltersAndRender();
-      if (searchInput) searchInput.focus();
-    }); // sorting headers
-  const keys = [
-    "idProducto",
-    "imagen",
-    "nombre",
-    "precio",
-    "descripcion",
-    null,
-  ];
-  const ths = document.querySelectorAll("table thead th");
-  ths.forEach((th, idx) => {
-    const key = keys[idx];
-    if (!key) return;
-    th.style.cursor = "pointer";
-    th.addEventListener("click", () => {
-      if (sortKey !== key) {
-        sortKey = key;
-        sortDir = "asc";
-      } else sortDir = sortDir === "asc" ? "desc" : "asc";
-      ths.forEach((t) => {
-        t.classList.remove("sorted-asc", "sorted-desc");
-        const ic = t.querySelector(".sort-icon");
-        if (ic) ic.className = "fa-solid fa-sort sort-icon";
-      });
-      if (sortDir === "asc") {
-        th.classList.add("sorted-asc");
-        const ic = th.querySelector(".sort-icon");
-        if (ic) ic.className = "fa-solid fa-sort-up sort-icon";
-      } else {
-        th.classList.add("sorted-desc");
-        const ic = th.querySelector(".sort-icon");
-        if (ic) ic.className = "fa-solid fa-sort-down sort-icon";
+  if (closeMessages && messagesModal)
+    closeMessages.addEventListener("click", () => {
+      messagesModal.classList.remove("show");
+      messagesModal.setAttribute("aria-hidden", "true");
+    });
+  if (messagesModal)
+    messagesModal.addEventListener("click", (e) => {
+      if (e.target === messagesModal) {
+        messagesModal.classList.remove("show");
+        messagesModal.setAttribute("aria-hidden", "true");
       }
-      applyFiltersAndRender();
     });
-  });
-  if (btnCrear)
-    btnCrear.addEventListener("click", () => {
-      document.getElementById("productoForm").reset();
-      document.getElementById("previewImg").style.display = "none";
-      document.getElementById("idProducto").value = "";
-      if (modalTitle) modalTitle.textContent = "Crear Producto";
-      editingId = null;
-      openModal();
+
+  // Email panel inline search (filters .msg-item inside the dropdown)
+  (function setupEmailPanelSearch() {
+    const emailPanel = document.querySelector(".email-panel");
+    if (!emailPanel) return;
+    const searchBox = emailPanel.querySelector(
+      ".dropdown-search input[type=search]",
+    );
+    if (!searchBox) return;
+    const normalize = (s) =>
+      (s || "")
+        .toString()
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .toLowerCase();
+    searchBox.addEventListener("input", (e) => {
+      const q = String(e.target.value || "").trim();
+      const term = normalize(q);
+      const items = emailPanel.querySelectorAll(".msg-item");
+      items.forEach((it) => {
+        if (!term) {
+          // clear inline style so CSS (nth-child) rules apply
+          it.style.display = "";
+          return;
+        }
+        const subj = normalize(it.getAttribute("data-subject") || "");
+        const body = normalize(it.getAttribute("data-body") || "");
+        const name = normalize(
+          it.querySelector(".msg-name")?.textContent || "",
+        );
+        const combined = `${subj} ${body} ${name}`;
+        if (combined.includes(term)) it.style.display = "flex";
+        else it.style.display = "none";
+      });
+      // if user searched, ensure panel is open and expanded to show matches
+      if (term) {
+        emailPanel.classList.add("open", "expanded");
+        const btn = document.getElementById("emailBtn");
+        if (btn) positionPanel(btn, emailPanel);
+      }
     });
-  if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
-  const closeDetailBtn = document.getElementById("closeDetail");
-  if (closeDetailBtn)
-    closeDetailBtn.addEventListener("click", closeDetailModal);
-  if (modal)
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) closeModal();
-    });
-  const detailModal = document.getElementById("detailModal");
-  if (detailModal)
-    detailModal.addEventListener("click", (e) => {
-      if (e.target === detailModal) closeDetailModal();
-    });
-  cargarProductos();
+  })();
 });
+
+// Topbar dropdowns: toggle panels and close on outside click
+function setupTopbarDropdowns() {
+  const emailBtn = document.getElementById("emailBtn");
+  const notifBtn = document.getElementById("notifBtn");
+  const emailPanel = document.getElementById("emailPanel");
+  const notifPanel = document.getElementById("notifPanel");
+  const userBtn = document.getElementById("userBtn");
+  const userPanel = document.getElementById("userPanel");
+
+  function closeAll() {
+    [emailPanel, notifPanel].forEach((p) => {
+      if (p) p.classList.remove("open");
+    });
+    if (userPanel) userPanel.classList.remove("open");
+    if (emailBtn) emailBtn.setAttribute("aria-expanded", "false");
+    if (notifBtn) notifBtn.setAttribute("aria-expanded", "false");
+    if (userBtn) userBtn.setAttribute("aria-expanded", "false");
+  }
+
+  if (emailBtn && emailPanel) {
+    emailBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = emailPanel.classList.toggle("open");
+      emailBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open && notifPanel) notifPanel.classList.remove("open");
+      if (open) positionPanel(emailBtn, emailPanel);
+    });
+  }
+  if (notifBtn && notifPanel) {
+    notifBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = notifPanel.classList.toggle("open");
+      notifBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open && emailPanel) emailPanel.classList.remove("open");
+      if (open) positionPanel(notifBtn, notifPanel);
+    });
+  }
+
+  if (userBtn && userPanel) {
+    userBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = userPanel.classList.toggle("open");
+      userBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) {
+        // close others
+        if (emailPanel) emailPanel.classList.remove("open");
+        if (notifPanel) notifPanel.classList.remove("open");
+        positionPanel(userBtn, userPanel);
+      }
+    });
+  }
+
+  // Close on outside click
+  document.addEventListener("click", (e) => {
+    const target = e.target;
+    if (
+      !emailBtn?.contains(target) &&
+      !notifBtn?.contains(target) &&
+      !emailPanel?.contains(target) &&
+      !notifPanel?.contains(target)
+    ) {
+      closeAll();
+    }
+  });
+
+  // Close panels with Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeAll();
+  });
+  // reposition panels on resize so they remain visible
+  window.addEventListener("resize", () => {
+    if (emailPanel?.classList.contains("open") && emailBtn)
+      positionPanel(emailBtn, emailPanel);
+    if (notifPanel?.classList.contains("open") && notifBtn)
+      positionPanel(notifBtn, notifPanel);
+  });
+}
+
+function positionPanel(btn, panel) {
+  if (!btn || !panel) return;
+  // ensure panel is visible for measurements
+  panel.classList.add("open");
+  // tiny timeout to allow layout
+  requestAnimationFrame(() => {
+    const rect = btn.getBoundingClientRect();
+    const pRect = panel.getBoundingClientRect();
+    let left = rect.right - pRect.width;
+    // prefer aligning right edge with button, but keep within viewport
+    if (left < 8) left = rect.left;
+    if (left + pRect.width > window.innerWidth - 8)
+      left = Math.max(8, window.innerWidth - pRect.width - 8);
+    const top = rect.bottom + 8; // 8px gap from button
+    panel.style.left = left + "px";
+    panel.style.top = top + "px";
+  });
+}
+
+// Shell controls: global initialization for sidebar collapse and theme toggle
+function setupShellControls() {
+  const burger = document.getElementById("burgerBtn");
+  const sidebar = document.querySelector(".sidebar");
+  const themeToggle = document.getElementById("themeToggle");
+  const body = document.body;
+
+  if (sidebar) {
+    const collapsed = localStorage.getItem("sidebarCollapsed") === "1";
+    if (collapsed) sidebar.classList.add("collapsed");
+  }
+
+  const theme =
+    localStorage.getItem("theme") ||
+    (window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light");
+  if (theme === "dark") body.classList.add("dark");
+  if (themeToggle) themeToggle.classList.toggle("on", theme === "dark");
+  if (themeToggle)
+    themeToggle.setAttribute(
+      "aria-checked",
+      theme === "dark" ? "true" : "false",
+    );
+
+  if (burger && sidebar) {
+    if (!burger.dataset.shellBound) {
+      burger.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+        localStorage.setItem(
+          "sidebarCollapsed",
+          sidebar.classList.contains("collapsed") ? "1" : "0",
+        );
+      });
+      burger.dataset.shellBound = "1";
+    }
+  }
+  if (themeToggle) {
+    if (!themeToggle.dataset.shellBound) {
+      themeToggle.addEventListener("click", () => {
+        body.classList.toggle("dark");
+        const on = body.classList.contains("dark");
+        themeToggle.classList.toggle("on", on);
+        themeToggle.setAttribute("aria-checked", on ? "true" : "false");
+        localStorage.setItem("theme", on ? "dark" : "light");
+      });
+      themeToggle.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          themeToggle.click();
+        }
+      });
+      themeToggle.dataset.shellBound = "1";
+    }
+  }
+}
+
+document.addEventListener("DOMContentLoaded", setupShellControls);
 
 function abrirEditarProducto(p) {
   editingId = p.idProducto;

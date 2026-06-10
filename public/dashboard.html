@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar (copied structure) -->
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="brand">airframe</div>
+      <div class="profile">
+        <img src="https://i.pravatar.cc/64?img=5" alt="avatar">
+        <div class="meta">
+          <div class="name">Gregorio Carroll</div>
+          <div class="role">International Branding Producer</div>
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li class="active has-submenu">
+            <a href="/index.html"><i class="fa-solid fa-box"></i><span>Productos</span><i class="fa-solid fa-chevron-right chev"></i></a>
+            <div class="submenu">
+              <a href="/index.html">Todos</a>
+              <a href="#">Nuevo producto</a>
+            </div>
+          </li>
+          <li class="has-submenu">
+            <a href="/usuarios.html"><i class="fa-solid fa-users"></i><span>Usuarios</span><i class="fa-solid fa-chevron-right chev"></i></a>
+            <div class="submenu">
+              <a href="/usuarios.html">Todos</a>
+              <a href="#">Nuevo usuario</a>
+            </div>
+          </li>
+          <li class="nav-section"><span class="section-title">Ventas</span></li>
+          <li class="has-submenu open">
+            <a href="#"><i class="fa-solid fa-chart-line"></i><span>Ventas</span><i class="fa-solid fa-chevron-down chev"></i></a>
+            <div class="submenu">
+              <a href="/dashboard.html">Dashboard</a>
+              <a href="/pedidos.html">Pedidos</a>
+              <a href="/clientes.html">Clientes</a>
+            </div>
+          </li>
+          <li class="nav-section"><span class="section-title">Analytics</span></li>
+          <li><a href="/reportes.html"><i class="fa-solid fa-chart-pie"></i><span>Reportes</span></a></li>
+          <li class="nav-section"><span class="section-title">Integraciones</span></li>
+          <li><a href="/integraciones.html"><i class="fa-solid fa-plug"></i><span>Integraciones</span></a></li>
+          <li class="nav-section"><span class="section-title">Soporte</span></li>
+          <li><a href="/ayuda.html"><i class="fa-solid fa-circle-question"></i><span>Ayuda</span></a></li>
+          <li><a href="/configuracion.html"><i class="fa-solid fa-cog"></i><span>Configuración</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div class="topbar">
+          <div class="left">
+            <button id="burgerBtn" class="burger" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+            <div class="page-title">Dashboard</div>
+          </div>
+          <div class="right">
+            <div class="topbar-item" style="position:relative;display:inline-block">
+              <button class="icon-btn email" title="Correo" id="emailBtn" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-envelope"></i>
+                <span class="icon-badge">3</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <h2>Dashboard</h2>
+        <p>Resumen rápido de métricas y KPIs. Aquí puedes añadir widgets, gráficas y estadísticas relevantes.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px">
+          <div class="card">Ventas hoy<br><strong>$1,234</strong></div>
+          <div class="card">Pedidos pendientes<br><strong>12</strong></div>
+          <div class="card">Clientes activos<br><strong>342</strong></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
