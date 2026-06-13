@@ -167,7 +167,8 @@
                   <span class="drop-icon" aria-hidden="true"><i class="fa-solid fa-image"></i></span>
                   <span id="avatarDropText" class="drop-text">Arrastra la imagen aquí o haz clic para seleccionar</span>
                 </div>
-                <img id="avatarPreview" class="preview" alt="Vista previa" style="display:none;" />
+                <span class="drop-plus" aria-hidden="true"><i class="fa-solid fa-plus"></i></span>
+                <img id="avatarPreview" class="preview" alt="" />
               </div>
             </div>
           </div>
@@ -343,13 +344,13 @@
 
       function abrirVerUsuario(u){ if(!u) return; detailNombre.textContent = u.nombre || ''; detailEmail.textContent = u.email || ''; detailAvatar.src = u.avatar || 'https://i.pravatar.cc/80?img=12'; showModal(userDetailModal); }
       function abrirEditarUsuario(u){ if(!u) return; idField.value = u.idUsuario || u.id || ''; document.getElementById('userNombre').value = u.nombre || ''; document.getElementById('userEmail').value = u.email || ''; userModalTitle.textContent = 'Editar Usuario';
-        // set preview
-        const preview = document.getElementById('avatarPreview'); const dropText = document.getElementById('avatarDropText'); const avatarInput = document.getElementById('userAvatar');
-        if(preview && dropText){ if(u.avatar){ preview.src = u.avatar; preview.style.display='block'; dropText.style.display='none'; } else { preview.src=''; preview.style.display='none'; dropText.style.display='block'; } }
+        // set preview using classes so CSS handles layout
+        const preview = document.getElementById('avatarPreview'); const avatarInput = document.getElementById('userAvatar'); const avatarDrop = document.getElementById('avatarDrop');
+        if(preview && avatarDrop){ if(u.avatar){ preview.src = u.avatar; avatarDrop.classList.add('has-preview'); avatarDrop.classList.remove('create'); } else { preview.src=''; avatarDrop.classList.remove('has-preview'); avatarDrop.classList.add('create'); } }
         if(avatarInput) avatarInput.value='';
         showModal(userModal);
       }
-      function abrirCrearUsuario(){ userForm.reset(); idField.value = ''; userModalTitle.textContent = 'Crear Usuario'; const preview = document.getElementById('avatarPreview'); const dropText = document.getElementById('avatarDropText'); const avatarInput = document.getElementById('userAvatar'); if(preview){ preview.src=''; preview.style.display='none'; } if(dropText){ dropText.style.display='block'; } if(avatarInput) avatarInput.value=''; showModal(userModal); }
+      function abrirCrearUsuario(){ userForm.reset(); idField.value = ''; userModalTitle.textContent = 'Crear Usuario'; const preview = document.getElementById('avatarPreview'); const avatarInput = document.getElementById('userAvatar'); const avatarDrop = document.getElementById('avatarDrop'); if(preview){ preview.src=''; } if(avatarInput) avatarInput.value=''; if(avatarDrop){ avatarDrop.classList.remove('has-preview'); avatarDrop.classList.add('create'); } showModal(userModal); }
 
       // submit using FormData to include avatar file
       userForm.addEventListener('submit', async (e)=>{
@@ -385,11 +386,12 @@
         const drop = document.getElementById('avatarDrop');
         const avatarInput = document.getElementById('userAvatar');
         if(drop && avatarInput){
+          const avatarPreview = document.getElementById('avatarPreview');
           drop.addEventListener('click', ()=> avatarInput.click());
           drop.addEventListener('dragover', (e)=>{ e.preventDefault(); drop.classList.add('dragover'); });
           drop.addEventListener('dragleave', ()=> drop.classList.remove('dragover'));
-          drop.addEventListener('drop', (e)=>{ e.preventDefault(); drop.classList.remove('dragover'); const dt = e.dataTransfer; if(!dt) return; const f = dt.files[0]; if(f && f.type.startsWith('image/')) { avatarInput.files = dt.files; const preview = document.getElementById('avatarPreview'); const dropText = document.getElementById('avatarDropText'); if(preview){ preview.src = URL.createObjectURL(f); preview.style.display='block'; } if(dropText){ dropText.style.display='none'; } } });
-          avatarInput.addEventListener('change', ()=>{ const f = avatarInput.files && avatarInput.files[0]; const preview = document.getElementById('avatarPreview'); const dropText = document.getElementById('avatarDropText'); if(f){ if(preview){ preview.src = URL.createObjectURL(f); preview.style.display='block'; } if(dropText){ dropText.style.display='none'; } } else { if(preview){ preview.src=''; preview.style.display='none'; } if(dropText){ dropText.style.display='block'; } } });
+          drop.addEventListener('drop', (e)=>{ e.preventDefault(); drop.classList.remove('dragover'); const dt = e.dataTransfer; if(!dt) return; const f = dt.files[0]; if(f && f.type.startsWith('image/')) { avatarInput.files = dt.files; if(avatarPreview){ avatarPreview.src = URL.createObjectURL(f); } drop.classList.add('has-preview'); drop.classList.remove('create'); } });
+          avatarInput.addEventListener('change', ()=>{ const f = avatarInput.files && avatarInput.files[0]; if(f){ if(avatarPreview){ avatarPreview.src = URL.createObjectURL(f); } drop.classList.add('has-preview'); drop.classList.remove('create'); } else { if(avatarPreview){ avatarPreview.src=''; } drop.classList.remove('has-preview'); drop.classList.add('create'); } });
         }
       }
 

@@ -128,6 +128,14 @@ async function cargarProductos() {
             e.stopPropagation();
             const open = li.classList.toggle("open");
             link.setAttribute("aria-expanded", open ? "true" : "false");
+            // smooth scroll the toggled item into view when opened
+            if (open) {
+              try {
+                li.scrollIntoView({ behavior: "smooth", block: "nearest" });
+              } catch (err) {
+                /* ignore */
+              }
+            }
           });
           chev.dataset.bound = "1";
         }
@@ -137,7 +145,14 @@ async function cargarProductos() {
           const href = link.getAttribute("href");
           if (href === "#" || href === "") {
             e.preventDefault();
-            li.classList.toggle("open");
+            const opened = li.classList.toggle("open");
+            if (opened) {
+              try {
+                li.scrollIntoView({ behavior: "smooth", block: "nearest" });
+              } catch (err) {
+                /* ignore */
+              }
+            }
           }
         });
       }
@@ -516,6 +531,11 @@ function setupImageDragDrop() {
   const fileInput = document.getElementById("imagen");
   const preview = document.getElementById("previewImg");
   if (!dropArea || !fileInput) return;
+  const dropPlus = dropArea.querySelector(".drop-plus");
+  // default to create state when no preview present
+  if (preview && (!preview.src || preview.src === "")) {
+    dropArea.classList.add("create");
+  }
   function preventDefaults(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -547,16 +567,22 @@ function setupImageDragDrop() {
     if (typeof file === "string") {
       preview.src = file;
       preview.style.display = "block";
+      dropArea.classList.add("has-preview");
+      dropArea.classList.remove("create");
       return;
     }
     const url = URL.createObjectURL(file);
     preview.src = url;
     preview.style.display = "block";
+    dropArea.classList.add("has-preview");
+    dropArea.classList.remove("create");
   }
   formulario.addEventListener("reset", () => {
     if (preview) {
       preview.style.display = "none";
       preview.src = "";
+      dropArea.classList.remove("has-preview");
+      dropArea.classList.add("create");
     }
   });
 }
@@ -658,6 +684,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (pf) pf.reset();
         const preview = document.getElementById("previewImg");
         if (preview) preview.style.display = "none";
+        const dropArea = document.getElementById("dropArea");
+        if (dropArea) {
+          dropArea.classList.add("create");
+          dropArea.classList.remove("has-preview");
+          const p = document.getElementById("previewImg");
+          if (p) {
+            p.src = "";
+            p.style.display = "none";
+          }
+        }
         const idEl = document.getElementById("idProducto");
         if (idEl) idEl.value = "";
         if (modalTitle) modalTitle.textContent = "Crear Producto";
@@ -845,14 +881,31 @@ function setupTopbarDropdowns() {
     });
   }
 
+  // Allow clicking the sidebar profile area to open the same userPanel
+  const sidebarProfile = document.querySelector(".sidebar .profile");
+  if (sidebarProfile && userPanel) {
+    sidebarProfile.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = userPanel.classList.toggle("open");
+      if (open) {
+        if (emailPanel) emailPanel.classList.remove("open");
+        if (notifPanel) notifPanel.classList.remove("open");
+        positionPanel(sidebarProfile, userPanel);
+      }
+    });
+  }
+
   // Close on outside click
   document.addEventListener("click", (e) => {
     const target = e.target;
     if (
       !emailBtn?.contains(target) &&
       !notifBtn?.contains(target) &&
+      !userBtn?.contains(target) &&
+      !sidebarProfile?.contains(target) &&
       !emailPanel?.contains(target) &&
-      !notifPanel?.contains(target)
+      !notifPanel?.contains(target) &&
+      !userPanel?.contains(target)
     ) {
       closeAll();
     }
@@ -972,9 +1025,19 @@ function abrirEditarProducto(p) {
     if (p.imagen) {
       preview.src = p.imagen;
       preview.style.display = "block";
+      const dropArea = document.getElementById("dropArea");
+      if (dropArea) {
+        dropArea.classList.add("has-preview");
+        dropArea.classList.remove("create");
+      }
     } else {
       preview.style.display = "none";
       preview.src = "";
+      const dropArea = document.getElementById("dropArea");
+      if (dropArea) {
+        dropArea.classList.remove("has-preview");
+        dropArea.classList.add("create");
+      }
     }
   }
   openModal();

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Productos</title>
   <link rel="stylesheet" href="/style.css">
+  <script src="/theme-init.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Favicon -->
 	<link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -13,12 +14,15 @@
 </head>
 <body>
   <div class="app-container">
-    <aside class="sidebar" aria-label="Navegación principal">
+      <aside class="sidebar" aria-label="Navegación principal">
       <div class="brand">airframe</div>
       <div class="profile">
-        <img src="https://i.pravatar.cc/64?img=5" alt="avatar">
+        <div class="avatar-wrap">
+          <img src="https://i.pravatar.cc/64?img=5" alt="avatar" class="profile-avatar">
+          <span class="status-dot profile-online" aria-hidden="true"></span>
+        </div>
         <div class="meta">
-          <div class="name">Gregorio Carroll</div>
+          <div class="name">Gregorio Carroll <i class="fa-solid fa-caret-down profile-caret" aria-hidden="true"></i></div>
           <div class="role">International Branding Producer</div>
         </div>
       </div>
@@ -187,15 +191,21 @@
             <div class="topbar-item" style="position:relative;display:inline-block">
               <button id="userBtn" class="icon-btn" title="Cuenta de usuario" aria-haspopup="true" aria-expanded="false" style="padding:4px;">
                 <img src="https://i.pravatar.cc/48?img=3" alt="Avatar" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:block;">
-                <span class="status-dot user-online" aria-hidden="true" style="position:absolute;right:6px;bottom:6px;width:10px;height:10px;border-radius:50%;border:2px solid var(--card);background:#16a34a"></span>
+                <span class="status-dot user-online" aria-hidden="true" style="position:absolute;right:6px;bottom:6px;width:10px;height:10px;border-radius:50%;border:2px solid var(--card);"></span>
               </button>
-              <div class="dropdown-panel" id="userPanel" role="menu" aria-hidden="true">
-                <div class="dropdown-header">Mi cuenta</div>
-                <ul class="dropdown-list" style="padding:8px">
-                  <li class="dropdown-item"><a href="#" id="profileLink"><i class="fa-solid fa-user"></i> Perfil</a></li>
-                  <li class="dropdown-item"><a href="/configuracion.html" id="settingsLink"><i class="fa-solid fa-cog"></i> Configuración</a></li>
-                  <li class="dropdown-item"><a href="#" id="helpLink"><i class="fa-solid fa-circle-question"></i> Ayuda</a></li>
-                  <li class="dropdown-item"><a href="#" id="logoutLink"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a></li>
+              <div class="dropdown-panel user-menu" id="userPanel" role="menu" aria-hidden="true">
+                <div class="user-menu-header">
+                  <div class="user-menu-name">Darron Daniel</div>
+                </div>
+                <div class="user-menu-sep" aria-hidden="true"></div>
+                <ul class="user-menu-list">
+                  <li class="user-menu-item"><a href="#" id="profileLink"><i class="fa-solid fa-user"></i><span>Mi perfil</span></a></li>
+                  <li class="user-menu-item"><a href="/configuracion.html" id="settingsLink"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a></li>
+                  <li class="user-menu-item"><a href="#" id="billingLink"><i class="fa-solid fa-file-invoice-dollar"></i><span>Facturación</span></a></li>
+                </ul>
+                <div class="user-menu-sep" aria-hidden="true"></div>
+                <ul class="user-menu-list" style="padding-bottom:8px">
+                  <li class="user-menu-item logout"><a href="#" id="logoutLink"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Desconectar</span></a></li>
                 </ul>
               </div>
             </div>
@@ -252,7 +262,8 @@
                   <span class="drop-icon" aria-hidden="true"><i class="fa-solid fa-image"></i></span>
                   <span class="drop-text">Arrastra la imagen aquí o haz clic para seleccionar</span>
                 </div>
-                <img id="previewImg" class="preview" alt="Vista previa" style="display:none;" />
+                <span class="drop-plus" aria-hidden="true"><i class="fa-solid fa-plus"></i></span>
+                <img id="previewImg" class="preview" alt="" style="display:none;" />
               </div>
             </div>
           </div>
